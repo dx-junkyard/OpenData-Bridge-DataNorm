@@ -2,6 +2,18 @@
 
 都知事杯 OpenDataHackathon 2023   
 データ変換のjson作成  
+
+## 実行方法
+```Python
+python datanorm.py csvファイル名.csv
+
+or
+
+python datanorm.py ./data (←.csvファイルがあるフォルダパス)
+```
+
+
+
 ChatGPT4推奨  
 
 プロンプト
