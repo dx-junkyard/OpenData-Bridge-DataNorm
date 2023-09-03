@@ -3,7 +3,6 @@ import pandas as pd
 from collections import OrderedDict
 import os
 from glob import glob
-import pandas as pd
 
 def load_mapping_rules(path):
     mapping_rules = json.load(open(path, "r", encoding="utf-8"))
@@ -84,3 +83,6 @@ def main(filepath):
 
     # 結合したデータを新しいCSVファイルに出力
     combined_csv.to_csv("combined.csv", index=False)
+
+if __name__ == '__main__':
+    main("2016-10hoikusisetu_985.csv")
