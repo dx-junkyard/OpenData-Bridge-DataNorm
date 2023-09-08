@@ -3,86 +3,108 @@ import pandas as pd
 from collections import OrderedDict
 import os
 from glob import glob
+import argparse
+import chardet
+
+
+def detect_encoding(file_path):
+    with open(file_path, 'rb') as f:
+        result = chardet.detect(f.read())
+    return result['encoding']
 
 def load_mapping_rules(path):
-    mapping_rules = json.load(open(path, "r", encoding="utf-8"))
+    """JSONファイルからマッピングルールを読み込む"""
+    with open(path, "r", encoding="utf-8") as f:
+        mapping_rules = json.load(f)
     mapping_rules = OrderedDict(mapping_rules)
+
+    # Remove duplicate keys from the values list
+    for key in mapping_rules.keys():
+        mapping_rules[key] = [item for item in mapping_rules[key] if item != key]
 
     return mapping_rules
 
 def load_csv(path):
-    """pathのcsvを読み込む, encodingはutf-8またはANSI"""
-    df = None
     try:
-        df = pd.read_csv(path)
+        return pd.read_csv(path)
     except Exception as e:
+        detected_encoding = detect_encoding(path)
         try:
-            df = pd.read_csv(path, encoding="ANSI")            
-        except Exception as e:     
-           print(f"Could not read {path}: {e}")
-
-    return df
+            return pd.read_csv(path, encoding=detected_encoding)
+        except Exception as e:
+            print(f"Could not read {path} with detected encoding {detected_encoding}: {e}")
+            return None
 
 def trans_column_name(df, mapping_rules):
+    """DataFrameの列名をマッピングルールに基づいて変更する"""
     for column_name in df.columns:
-        # key : 変更後
-        # value : 変換前list
         for key, value in mapping_rules.items():
             if column_name in value:
                 df.rename(columns={column_name: key}, inplace=True)
                 break
         else:
+            print("drop column : " + column_name)
             df.drop(column_name, axis=1, inplace=True)
-
     return df
 
-# filepath : 
-def main(filepath):
+def main(directory_path):
+    """指定されたディレクトリ内のCSVファイルを読み込み、結合して新しいCSVファイルに出力する"""
     mapping_rules = load_mapping_rules("mapping_rules.json")
+    if not os.path.exists(directory_path):
+        print(f"The directory {directory_path} does not exist.")
 
-    # ↓ 特定のフォルダ内にある.csvファイルを一括で処理できる
-    # # パスを指定してCSVファイルの一覧を取得
-    # csv_files = glob(os.path.join("data", "*.csv"))
-    # print(csv_files)
+    csv_files = glob(os.path.join(directory_path, "*.csv"))
+    print("CSV files in directory:", csv_files)
 
-    # # 空のDataFrameを作成
-    # combined_csv = pd.DataFrame(columns=list(mapping_rules.keys()))
-
-    # # 各CSVファイルを読み込み、結合
-    # for cnt, file in enumerate(csv_files):
-    #     df = load_csv(file)
-    #     if df is None: continue
-
-    #     df = trans_column_name(df, mapping_rules)    
-
-    #     combined_csv = pd.concat([combined_csv, df], ignore_index=True, sort=False)
-
-
-    # 空のDataFrameを作成
     combined_csv = pd.DataFrame(columns=list(mapping_rules.keys()))
 
-    # 各CSVファイルを読み込み、結合
-    df = load_csv(filepath)
-    if df is None: return
+    for file in csv_files:
+        print("proc CSV file :" + file)
+        df = load_csv(file)
+        if df is None or df.empty:
+            print(f"Failed to load {file}")
+            continue
 
-    df = trans_column_name(df, mapping_rules)    
+        # 行数を確認（変更前）
+        original_row_count = len(df)
 
-    combined_csv = pd.concat([combined_csv, df], ignore_index=True, sort=False)
+        df = trans_column_name(df, mapping_rules)
 
-    # 有効な列のみでDataFrameをフィルタ
+        # 行数を確認（変更後）
+        new_row_count = len(df)
+
+        # 行数が減った場合は報告
+        if original_row_count != new_row_count:
+            print(f"Warning: {original_row_count - new_row_count} rows were removed in {file}")
+        else:
+            print(f"CSV load OK.: {original_row_count} rows were loaded in {file}")
+
+
+        # Ensure that the DataFrame has the same columns as combined_csv before concatenating
+        for col in combined_csv.columns:
+            if col not in df.columns:
+                df[col] = None  # Add missing columns to df, filling with None
+
+        # Debug output
+        print(f"Processing {file}")
+        print("combined_csv columns:", combined_csv.columns)
+        print("df columns:", df.columns)
+
+        # Ensure columns are in the same order
+        df = df[combined_csv.columns]
+
+        combined_csv = pd.concat([combined_csv, df], ignore_index=True, sort=False)
+
     combined_csv = combined_csv[list(mapping_rules.keys())]
-
-    # ダブルクォートを""へreplace
     combined_csv.replace(to_replace='"', value='', regex=True, inplace=True)
-
-    # すべてがnaの場合削除
     combined_csv.dropna(how='all', inplace=True)
-
-    # ないカラムについては空文字で埋める
     combined_csv.fillna('', inplace=True)
 
-    # 結合したデータを新しいCSVファイルに出力
     combined_csv.to_csv("combined.csv", index=False)
 
 if __name__ == '__main__':
-    main("2016-10hoikusisetu_985.csv")
+    parser = argparse.ArgumentParser(description='Process and combine CSV files from a specified directory.')
+    parser.add_argument('directory_path', type=str, help='Path to the directory containing the CSV files.')
+    args = parser.parse_args()
+    main(args.directory_path)
+
