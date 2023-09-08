@@ -18,10 +18,6 @@ def load_mapping_rules(path):
         mapping_rules = json.load(f)
     mapping_rules = OrderedDict(mapping_rules)
 
-    # Remove duplicate keys from the values list
-    for key in mapping_rules.keys():
-        mapping_rules[key] = [item for item in mapping_rules[key] if item != key]
-
     return mapping_rules
 
 def load_csv(path):
