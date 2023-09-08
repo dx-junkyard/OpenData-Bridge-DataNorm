@@ -1,19 +1,40 @@
 # OpenData-Bridge-DataNorm
 
-都知事杯 OpenDataHackathon 2023   
-データ変換のjson作成  
+## 都知事杯 OpenDataHackathon 2023   
+
+## 概要
+
+OpenData Bridgeの検索で取得した様々なフォーマットのcsvファイルを一つのフォーマットに変換&結合するためのPythonコードと、変換定義(json)をChatGPTで生成するための方法を提示します。
+
+
 
 ## 実行方法
+
+## 手順
+### ChatGPT + プロンプトテンプレートを使った変換定義jsonの作成
+- 後述するプロンプトテンプレートを使用して、mapping_rules.jsonを作成する。
+- [input]のmaster.csvにデータを集約するcsvファイル、slave[n].csvに項目をmasterに合わせて変換するcsvファイルのヘッダーとデータをそれぞれ１行ずつ記載する（以下の中身を書き換える）。
+- slave[n]は変換するフォーマットの数だけ増やす。
+- [rule]以下は基本的には変更しなくてよい。
+
+
+### git clone
+```
+git clone https://github.com/dx-junkyard/OpenData-Bridge-DataNorm.git
+cd ./OpenData-Bridge-DataNorm
+```
+
+### Pythonでデータ変換＆結合
+- ChatGPTで作成したmapping_rules.jsonをOpenData-Bridge-DataNorm以下に配置
+- 以下のコマンドを実行
 ```Python
 python datanorm.py ./data
 ```
-./dataはcsvファイルがあるディレクトリ
+./dataは変換＆結合するcsvファイルがあるディレクトリ
 
 
-ChatGPT4推奨  
 
-プロンプトテンプレート
-[input]のmaster.csvにデータを集約するcsvファイル、slave[n].csvに項目をmasterに合わせて変換するcsvファイルのヘッダーとデータをそれぞれ１行ずつ記載する（以下の中身を書き換える）。slave[n]は変換するフォーマットの数だけ増やす。
+## プロンプトテンプレート
 ```
 異なる複数のフォーマットからなるcsvファイルを一つのフォーマットに統合したい。複数ファイルのうち、一つをmaster.csvとして、残りをslave[n].csvとする。このとき[n]は1以上の数字を想定する。
 入力[input]としてmaster.csvとslave[n].csvを与えるので[rule]以下のルールに基づき、mapping_rules.jsonを作成してほしい。
@@ -90,3 +111,8 @@ mapping_rules.json
 }
 ---
 ```
+
+## 制限事項
+- ChatGPT4推奨
+- プロンプトテンプレートはまだ改善が必要なので、出力結果に不備がある場合は都度、修正してご利用ください
+
