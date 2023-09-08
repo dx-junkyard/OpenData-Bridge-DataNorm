@@ -12,7 +12,8 @@ python datanorm.py ./data
 
 ChatGPT4推奨  
 
-プロンプト
+プロンプトテンプレート
+[input]のmaster.csvにデータを集約するcsvファイル、slave[n].csvに項目をmasterに合わせて変換するcsvファイルのヘッダーとデータをそれぞれ１行ずつ記載する（以下の中身を書き換える）。slave[n]は変換するフォーマットの数だけ増やす。
 ```
 異なる複数のフォーマットからなるcsvファイルを一つのフォーマットに統合したい。複数ファイルのうち、一つをmaster.csvとして、残りをslave[n].csvとする。このとき[n]は1以上の数字を想定する。
 入力[input]としてmaster.csvとslave[n].csvを与えるので[rule]以下のルールに基づき、mapping_rules.jsonを作成してほしい。
