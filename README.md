@@ -7,42 +7,45 @@
 OpenData Bridgeの検索で取得した様々なフォーマットのcsvファイルを一つのフォーマットに変換&結合するためのPythonコードと、変換定義(json)をChatGPTで生成するための方法を提示します。
 
 
-## データを１つのファイルに統合する手順
-- git cloneでソースコードを取得
-- csvデータの配置
-- 変換定義をChatGPTで生成するためのプロンプト生成
-- 変換定義のmapping_rules.json作成
-- データ変換＆結合
+##  バラバラのデータを統合する手順
+- 1. ソースコードを取得(git clone)
+- 2. 統合対象のcsvを配置
+- 3. 変換定義のmapping_rules.json作成(prompt_creator & ChatGPT)
+- 4. データ変換＆結合(datanorm.py)
 
 
 ## 実行方法
-### git clone
+### 1. ソースコードを取得(git clone)
 変換定義を作り出すChatGPT用のプロンプト生成と、データ変換を行うpythonコードを入手する。
 ```
 git clone https://github.com/dx-junkyard/OpenData-Bridge-DataNorm.git
 cd ./OpenData-Bridge-DataNorm
 ```
 
-### mapping_rules.jsonの作成
-mapping_rules.jsonで、異なるCSV形式からなる項目の対応関係を定義することができる。
-ここでは、ChatGPTにmappingrules.jsonを生成させるための適切なプロンプトを./data/*.csvから生成する。
-#### ChatGPT用のプロンプト生成
-これを作成するためには、例えば./data以下に変換対象のcsvファイルが複数あり、その中のhoikuen.csvの形式に合わせたい場合
-```
-python prompt_creator.py -dir ./data -m hoikuen.csv
-```
-を実行すると、ChatGPT(gpt4)に入れるプロンプトが生成される。
-#### ChatGPT(gpt4) でmapping_rules.jsonを生成する
-前述のpythonコード実行結果をChatGPT(gpt4)の命令文として貼り付けると、jsonが生成される
-#### mapping_rules.jsonの調整
-現状、完璧な変換定義を一回で作成することができないため、定義に問題のある箇所は手直しする。
-
-
-### Pythonでデータ変換＆結合
 追加のライブラリのインストール
 ```Python
 pip install -r requirements.txt
 ```
+
+### 2. 統合対象のcsvを配置
+OpenDataの検索で取得したcsvファイルをディレクトリ（ここでは./data）にまとめて配置
+
+### 3. 変換定義のmapping_rules.json作成(prompt_creator & ChatGPT)
+#### 3-1. 変換定義を生成するためのChatGPT用プロンプト生成(prompt_creator.py)
+異なるCSV形式からなる項目の対応関係をmapping_rules.jsonで定義し、pythonで変換&結合を行う。
+ここでは、ChatGPTにmapping_rules.jsonを生成させるための適切なプロンプトを./data/*.csvから生成する。
+例えば./data以下に変換対象のcsvファイルが複数あり、その中のhoikuen.csvの形式に合わせたい場合
+```
+python prompt_creator.py -dir ./data -m hoikuen.csv
+```
+を実行すると、ChatGPT(gpt4)に入れるプロンプトが生成される。
+#### 3-2. ChatGPT(gpt4) でmapping_rules.jsonを生成する
+前述のpythonコード実行結果をChatGPT(gpt4)の命令文として貼り付けると、jsonが生成される
+#### 3-3. mapping_rules.jsonの調整
+現状、完璧な変換定義を一回で作成することができないため、定義に問題のある箇所は手直しする。
+
+
+### 4. データ変換＆結合(datanorm.py)
 
 - ChatGPTで作成したmapping_rules.jsonをOpenData-Bridge-DataNorm以下に配置
 - 以下のコマンドを実行
@@ -50,7 +53,6 @@ pip install -r requirements.txt
 python datanorm.py ./data
 ```
 ./dataは変換＆結合するcsvファイルがあるディレクトリ
-
 
 
 ## ChatGPT用プロンプトテンプレート
