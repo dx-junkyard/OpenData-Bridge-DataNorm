@@ -7,22 +7,36 @@
 OpenData Bridgeの検索で取得した様々なフォーマットのcsvファイルを一つのフォーマットに変換&結合するためのPythonコードと、変換定義(json)をChatGPTで生成するための方法を提示します。
 
 
+## データを１つのファイルに統合する手順
+- git cloneでソースコードを取得
+- csvデータの配置
+- 変換定義をChatGPTで生成するためのプロンプト生成
+- 変換定義のmapping_rules.json作成
+- データ変換＆結合
+
 
 ## 実行方法
-
-## 手順
-### ChatGPT + プロンプトテンプレートを使った変換定義jsonの作成
-- 後述するプロンプトテンプレートを使用して、mapping_rules.jsonを作成する。
-- [input]のmaster.csvにデータを集約するcsvファイル、slave[n].csvに項目をmasterに合わせて変換するcsvファイルのヘッダーとデータをそれぞれ１行ずつ記載する（以下の中身を書き換える）。
-- slave[n]は変換するフォーマットの数だけ増やす。
-- [rule]以下は基本的には変更しなくてよい。
-
-
 ### git clone
+変換定義を作り出すChatGPT用のプロンプト生成と、データ変換を行うpythonコードを入手する。
 ```
 git clone https://github.com/dx-junkyard/OpenData-Bridge-DataNorm.git
 cd ./OpenData-Bridge-DataNorm
 ```
+
+### mapping_rules.jsonの作成
+mapping_rules.jsonで、異なるCSV形式からなる項目の対応関係を定義することができる。
+ここでは、ChatGPTにmappingrules.jsonを生成させるための適切なプロンプトを./data/*.csvから生成する。
+#### ChatGPT用のプロンプト生成
+これを作成するためには、例えば./data以下に変換対象のcsvファイルが複数あり、その中のhoikuen.csvの形式に合わせたい場合
+```
+python prompt_creator.py -dir ./data -m hoikuen.csv
+```
+を実行すると、ChatGPT(gpt4)に入れるプロンプトが生成される。
+#### ChatGPT(gpt4) でmapping_rules.jsonを生成する
+前述のpythonコード実行結果をChatGPT(gpt4)の命令文として貼り付けると、jsonが生成される
+#### mapping_rules.jsonの調整
+現状、完璧な変換定義を一回で作成することができないため、定義に問題のある箇所は手直しする。
+
 
 ### Pythonでデータ変換＆結合
 追加のライブラリのインストール
@@ -39,7 +53,12 @@ python datanorm.py ./data
 
 
 
-## プロンプトテンプレート
+## ChatGPT用プロンプトテンプレート
+- [input]のmaster.csvにデータを集約するcsvファイル、slave[n].csvに項目をmasterに合わせて変換するcsvファイルのヘッダーとデータをそれぞれ１行ずつ記載する（以下の中身を書き換える）。
+- slave[n]は変換するフォーマットの数だけ増やす。
+- [rule]以下は基本的には変更しなくてよい。
+上記の要領で以下のテンプレートを編集してください。
+
 ```
 異なる複数のフォーマットからなるcsvファイルを一つのフォーマットに統合したい。複数ファイルのうち、一つをmaster.csvとして、残りをslave[n].csvとする。このとき[n]は1以上の数字を想定する。
 入力[input]としてmaster.csvとslave[n].csvを与えるので[rule]以下のルールに基づき、mapping_rules.jsonを作成してほしい。
