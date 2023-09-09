@@ -13,6 +13,8 @@ OpenData Bridgeの検索で取得した様々なフォーマットのcsvファ�
 3. 変換定義のmapping_rules.json作成(prompt_creator & ChatGPT)
 4. データ変換＆結合(datanorm.py)
 
+## Python バージョン
+3.11.5
 
 ## 実行方法
 ### 1. ソースコードを取得
