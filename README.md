@@ -18,8 +18,7 @@ OpenData Bridgeの検索で取得した様々なフォーマットのcsvファ�
 ### 1. ソースコードを取得
 変換定義を作り出すChatGPT用のプロンプト生成と、データ変換を行うpythonコードを入手する。
 ```
-git clone https://github.com/dx-junkyard/OpenData-Bridge-DataNorm.git
-cd ./OpenData-Bridge-DataNorm
+git clone https://github.com/dx-junkyard/OpenData-Bridge-DataNorm.git && cd ./OpenData-Bridge-DataNorm
 ```
 
 追加のライブラリのインストール
