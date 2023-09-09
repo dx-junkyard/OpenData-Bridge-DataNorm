@@ -25,6 +25,11 @@ cd ./OpenData-Bridge-DataNorm
 ```
 
 ### Pythonでデータ変換＆結合
+追加のライブラリのインストール
+```Python
+pip install -r requirements.txt
+```
+
 - ChatGPTで作成したmapping_rules.jsonをOpenData-Bridge-DataNorm以下に配置
 - 以下のコマンドを実行
 ```Python
