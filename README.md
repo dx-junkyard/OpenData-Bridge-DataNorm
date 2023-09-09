@@ -8,14 +8,14 @@ OpenData Bridgeの検索で取得した様々なフォーマットのcsvファ�
 
 
 ##  バラバラのデータを統合する手順
-- 1. ソースコードを取得(git clone)
-- 2. 統合対象のcsvを配置
-- 3. 変換定義のmapping_rules.json作成(prompt_creator & ChatGPT)
-- 4. データ変換＆結合(datanorm.py)
+1. ソースコードを取得(git clone)
+2. 統合対象のcsvを配置
+3. 変換定義のmapping_rules.json作成(prompt_creator & ChatGPT)
+4. データ変換＆結合(datanorm.py)
 
 
 ## 実行方法
-### 1. ソースコードを取得(git clone)
+### 1. ソースコードを取得
 変換定義を作り出すChatGPT用のプロンプト生成と、データ変換を行うpythonコードを入手する。
 ```
 git clone https://github.com/dx-junkyard/OpenData-Bridge-DataNorm.git
@@ -30,7 +30,7 @@ pip install -r requirements.txt
 ### 2. 統合対象のcsvを配置
 OpenDataの検索で取得したcsvファイルをディレクトリ（ここでは./data）にまとめて配置
 
-### 3. 変換定義のmapping_rules.json作成(prompt_creator & ChatGPT)
+### 3. 変換定義のmapping_rules.json作成
 #### 3-1. 変換定義を生成するためのChatGPT用プロンプト生成(prompt_creator.py)
 異なるCSV形式からなる項目の対応関係をmapping_rules.jsonで定義し、pythonで変換&結合を行う。
 ここでは、ChatGPTにmapping_rules.jsonを生成させるための適切なプロンプトを./data/*.csvから生成する。
@@ -45,7 +45,7 @@ python prompt_creator.py -dir ./data -m hoikuen.csv
 現状、完璧な変換定義を一回で作成することができないため、定義に問題のある箇所は手直しする。
 
 
-### 4. データ変換＆結合(datanorm.py)
+### 4. データ変換＆結合
 
 - ChatGPTで作成したmapping_rules.jsonをOpenData-Bridge-DataNorm以下に配置
 - 以下のコマンドを実行
@@ -59,7 +59,8 @@ python datanorm.py ./data
 - [input]のmaster.csvにデータを集約するcsvファイル、slave[n].csvに項目をmasterに合わせて変換するcsvファイルのヘッダーとデータをそれぞれ１行ずつ記載する（以下の中身を書き換える）。
 - slave[n]は変換するフォーマットの数だけ増やす。
 - [rule]以下は基本的には変更しなくてよい。
-上記の要領で以下のテンプレートを編集してください。
+
+上記の要領で以下のテンプレートを編集( 3-1. prompt_creator.pyを使えばここを自動化できる）。
 
 ```
 異なる複数のフォーマットからなるcsvファイルを一つのフォーマットに統合したい。複数ファイルのうち、一つをmaster.csvとして、残りをslave[n].csvとする。このとき[n]は1以上の数字を想定する。
