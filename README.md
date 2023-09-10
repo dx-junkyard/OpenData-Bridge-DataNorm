@@ -57,6 +57,7 @@ python datanorm.py ./data
 
 
 ## ChatGPT用プロンプトテンプレート
+"3-1"のpythonコード prompt_creator.pyの実行が難しい場合のみ、以下の手順でプロンプトを作成してください。
 - [input]のmaster.csvにデータを集約するcsvファイル、slave[n].csvに項目をmasterに合わせて変換するcsvファイルのヘッダーとデータをそれぞれ１行ずつ記載する（以下の中身を書き換える）。
 - slave[n]は変換するフォーマットの数だけ増やす。
 - [rule]以下は基本的には変更しなくてよい。
