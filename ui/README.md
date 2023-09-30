@@ -1,3 +1,6 @@
+# 開発言語
+React  
+TypeScript
 
 # setup
 初めて実行するときのみ実行してください
