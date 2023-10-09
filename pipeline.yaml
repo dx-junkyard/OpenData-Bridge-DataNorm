@@ -1,0 +1,12 @@
+steps:
+  - name: OpenDataDownload
+    type: download
+    download_config: download_config.json
+    download_dir: sample_data
+
+  - name: MergeData
+    type: merge
+    transform_config: mapping_rules.json
+    input_files: [./data/hoikuen.csv, ./data/13119attach681571.csv, ./data/1312320150914kosodate.csv, ./data/132217preschool-gakudo.csv, ./data/132217preschoolhoi-you.csv, ./data/13225c191.csv]
+    output_file: merged.csv
+
