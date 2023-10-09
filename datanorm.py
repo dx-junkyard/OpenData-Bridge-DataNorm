@@ -44,16 +44,21 @@ def trans_column_name(df, mapping_rules):
     return df
 
 def main(directory_path):
+    output_file = "combined.csv"
+    mapping_file = "mapping_rules.json"
+
     """指定されたディレクトリ内のCSVファイルを読み込み、結合して新しいCSVファイルに出力する"""
-    mapping_rules = load_mapping_rules("mapping_rules.json")
     if not os.path.exists(directory_path):
         print(f"The directory {directory_path} does not exist.")
 
     csv_files = glob(os.path.join(directory_path, "*.csv"))
     print("CSV files in directory:", csv_files)
 
-    combined_csv = pd.DataFrame(columns=list(mapping_rules.keys()))
+    merge(csv_files, mapping_file, output_file)
 
+def merge(csv_files, mapping_config, output_file):
+    mapping_rules = load_mapping_rules(mapping_config)
+    combined_csv = pd.DataFrame(columns=list(mapping_rules.keys()))
     for file in csv_files:
         print("proc CSV file :" + file)
         df = load_csv(file)
@@ -96,7 +101,7 @@ def main(directory_path):
     combined_csv.dropna(how='all', inplace=True)
     combined_csv.fillna('', inplace=True)
 
-    combined_csv.to_csv("combined.csv", index=False)
+    combined_csv.to_csv(output_file, index=False)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process and combine CSV files from a specified directory.')
