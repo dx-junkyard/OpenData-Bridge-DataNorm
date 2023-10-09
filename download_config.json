@@ -1,0 +1,17 @@
+{
+    "files": [
+        {
+            "url": "https://www.geospatial.jp/ckan/dataset/949e74d5-cd57-4aa2-80c5-b1db17dc84df/resource/ac1702c5-eccd-4b83-ae42-4903004d93ed/download/hoikuenyouchien.csv",
+            "default_url": "",
+            "license": "CC BY(表示)",
+            "filename": "hoikuenyouchien.csv"
+        },
+        {
+            "url": "https://www.geospatial.jp/ckan/dataset/7ffc0857-77cd-47f5-bc08-bafc9fec5616/resource/dc3339d7-c138-4e4a-bb1f-d6ba3a00238f/download/20150914hoikuyouchien.csv",
+            "default_url": "",
+            "license": "CC BY(表示)",
+            "filename": "20150914hoikuyouchien.csv"
+        }
+    ]
+}
+
