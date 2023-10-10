@@ -8,15 +8,22 @@ OpenData Bridgeの検索で取得した様々なフォーマットのcsvファ�
 
 
 ##  バラバラのデータを統合する手順
+### A. 変換定義の作成＆マージ
 1. ソースコードを取得(git clone)
 2. 統合対象のcsvを配置
 3. 変換定義のmapping_rules.json作成(prompt_creator & ChatGPT)
 4. データ変換＆結合(datanorm.py)
+### B. pipelineで自動化
+データのダウンロード先を定義し、A-3で作成した変換定義を指定することでデータ取得、変換、マージの流れを自動化します。
+1. ソースコードを取得(git clone)
+2. ダウンロード定義ファイルを作成
+3. pipeline定義（stepごとの実行内容、変換定義を指定）
+4. pipelineの実行
 
 ## Python バージョン
 3.11.5
 
-## 実行方法
+## 実行方法 A. 変換定義の作成＆マージ
 ### 1. ソースコードを取得
 変換定義を作り出すChatGPT用のプロンプト生成と、データ変換を行うpythonコードを入手する。
 ```
@@ -24,7 +31,7 @@ git clone https://github.com/dx-junkyard/OpenData-Bridge-DataNorm.git && cd ./Op
 ```
 
 追加のライブラリのインストール
-```Python
+```sh
 pip install -r requirements.txt
 ```
 
@@ -36,7 +43,7 @@ OpenDataの検索で取得したcsvファイルをディレクトリ（ここで
 異なるCSV形式からなる項目の対応関係をmapping_rules.jsonで定義し、pythonで変換&結合を行う。
 ここでは、ChatGPTにmapping_rules.jsonを生成させるための適切なプロンプトを./data/*.csvから生成する。
 例えば./data以下に変換対象のcsvファイルが複数あり、その中のhoikuen.csvの形式に合わせたい場合
-```
+```sh
 python prompt_creator.py -dir ./data -m hoikuen.csv
 ```
 を実行すると、ChatGPT(gpt4)に入れるプロンプトが生成される。
@@ -50,11 +57,51 @@ python prompt_creator.py -dir ./data -m hoikuen.csv
 
 - ChatGPTで作成したmapping_rules.jsonをOpenData-Bridge-DataNorm以下に配置
 - 以下のコマンドを実行
-```Python
+```sh
 python datanorm.py ./data
 ```
+
 ./dataは変換＆結合するcsvファイルがあるディレクトリ
 
+## 実行方法 B. pipelineで自動化
+### 1. ソースコードを取得(git clone)
+（A-1と同じ）
+### 2. ダウンロード定義ファイルを作成
+download_config.jsonを作成し、データダウンロード先を指定する
+```
+{
+    "files": [
+        {
+            "title": "タイトル（現在は使っていない）",
+            "url": "https://hogehoge/filename.csv",
+            "default_url": "",
+            "author": "データ作成者",
+            "license": "何らかのライセンス",
+            "filename": "出力ファイル名"
+        },
+    ]
+}
+```
+
+### 3. pipeline定義（stepごとの実行内容、変換定義を指定）
+pipeline.yamlを作成し、stepごとの実行内容を指定する。サンプルではダウンロードと変換＆マージ処理を指定している
+```
+steps:
+  - name: OpenDataDownload
+    type: download
+    download_config: download_config.json
+    download_dir: data
+
+  - name: MergeData
+    type: merge
+    transform_config: mapping_rules.json
+    input_files: [
+        ./data/ダウンロードしたファイル名
+```
+### 4. pipelineの実行
+```sh
+python pipeline_executor.py  pipeline.yaml
+```
 
 ## ChatGPT用プロンプトテンプレート
 "3-1"のpythonコード prompt_creator.pyの実行が難しい場合のみ、以下の手順でプロンプトを作成してください。

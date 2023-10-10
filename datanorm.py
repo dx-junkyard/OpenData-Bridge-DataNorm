@@ -20,16 +20,39 @@ def load_mapping_rules(path):
 
     return mapping_rules
 
-def load_csv(path):
+def csv_conv(path,header_line):
     try:
-        return pd.read_csv(path)
+        return pd.read_csv(path, header=header_line)
     except Exception as e:
         detected_encoding = detect_encoding(path)
         try:
-            return pd.read_csv(path, encoding=detected_encoding)
+            return pd.read_csv(path, encoding=detected_encoding, header=header_line)
         except Exception as e:
             print(f"Could not read {path} with detected encoding {detected_encoding}: {e}")
             return None
+
+def load_csv(filename):
+    # 文字コード判定
+    detected_encoding = detect_encoding(filename)
+
+    # ファイルを全ての行で読み込み
+    with open(filename, 'r', encoding=detected_encoding, errors='replace') as f:
+        lines = f.readlines()
+
+    header_line = 0  # ヘッダー行の初期位置
+
+    # ヘッダー行を発見するまでの空の列を持つ行をチェック
+    for idx, line in enumerate(lines):
+        cells = line.strip().split(',')
+        if '' in cells:
+            header_line = idx + 1
+        else:
+            break
+
+    # pandasでcsvを読み込み、ヘッダー行を指定
+    df = csv_conv(filename, header_line)
+    return df
+
 
 def trans_column_name(df, mapping_rules):
     """DataFrameの列名をマッピングルールに基づいて変更する"""
@@ -44,16 +67,21 @@ def trans_column_name(df, mapping_rules):
     return df
 
 def main(directory_path):
+    output_file = "combined.csv"
+    mapping_file = "mapping_rules.json"
+
     """指定されたディレクトリ内のCSVファイルを読み込み、結合して新しいCSVファイルに出力する"""
-    mapping_rules = load_mapping_rules("mapping_rules.json")
     if not os.path.exists(directory_path):
         print(f"The directory {directory_path} does not exist.")
 
     csv_files = glob(os.path.join(directory_path, "*.csv"))
     print("CSV files in directory:", csv_files)
 
-    combined_csv = pd.DataFrame(columns=list(mapping_rules.keys()))
+    merge(csv_files, mapping_file, output_file)
 
+def merge(csv_files, mapping_config, output_file):
+    mapping_rules = load_mapping_rules(mapping_config)
+    combined_csv = pd.DataFrame(columns=list(mapping_rules.keys()))
     for file in csv_files:
         print("proc CSV file :" + file)
         df = load_csv(file)
@@ -96,7 +124,7 @@ def main(directory_path):
     combined_csv.dropna(how='all', inplace=True)
     combined_csv.fillna('', inplace=True)
 
-    combined_csv.to_csv("combined.csv", index=False)
+    combined_csv.to_csv(output_file, index=False)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process and combine CSV files from a specified directory.')
