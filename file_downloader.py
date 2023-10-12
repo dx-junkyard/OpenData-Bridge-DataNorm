@@ -16,9 +16,10 @@ def download_file(url, save_path):
 def main():
     config_file = "download_config.json"
     download_dir = "./sample_data"
-    download(config_file, download_dir)
+    download(config_file, 'files', download_dir)
+    download(config_file, 'converters', download_dir)
 
-def download(config_file, download_dir):
+def download(config_file, target, download_dir):
     # JSONファイルの読み込み
     with open(config_file, 'r') as f:
         config = json.load(f)
@@ -27,9 +28,9 @@ def download(config_file, download_dir):
     if not os.path.exists(download_dir):
         os.makedirs(download_dir)
 
-    for item in config.get('files', []):
+    for item in config.get(target, []):
         download_url = item.get('url')
-        default_url = item.get('default_url')
+        default_url = item.get('cache_url')
         filename = item.get('filename')
 
         save_path = os.path.join(download_dir, filename)
