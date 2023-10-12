@@ -2,6 +2,7 @@ import yaml
 import pandas as pd
 import json
 import importlib.util
+import argparse
 
 def load_module_from_path(name, path):
     try:
@@ -36,14 +37,22 @@ def execute_pipeline(yaml_file):
     for step in pipeline['steps']:
         if step['type'] == 'download':
             merge_module = load_module_from_path("download", "file_downloader.py")
-            merge_module.download(step['download_config'], step['download_dir'])
+            merge_module.download(step['download_config'], "files", step['download_dir'])
+            merge_module.download(step['download_config'], "converters", "./")
+            merge_module.download(step['download_config'], "pipelines", "./")
     
         elif step['type'] == 'merge':
             merge_module = load_module_from_path("merge", "datanorm.py")
             merge_module.merge(step['input_files'], step['transform_config'], step['output_file'])
        
-        
+        elif step['type'] == 'rm_dq':
+            merge_module = load_module_from_path("fix_broken_header", "fix_broken_header.py")
+            merge_module.fix_broken_header(step['input_file'], step['output_file'])
+       
 
-if __name__ == "__main__":
-    execute_pipeline('pipeline.yaml')
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='pipeline exe.')
+    parser.add_argument('yaml_path', type=str, help='Path to the yaml file.')
+    args = parser.parse_args()
+    execute_pipeline(args.yaml_path)         
 

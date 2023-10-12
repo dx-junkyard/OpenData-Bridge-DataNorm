@@ -21,15 +21,14 @@ def load_mapping_rules(path):
     return mapping_rules
 
 def csv_conv(path,header_line):
+    detected_encoding = detect_encoding(path)
+    if detected_encoding == None:
+        detected_encoding = 'shift_jis'
     try:
-        return pd.read_csv(path, header=header_line)
+        return pd.read_csv(path, encoding=detected_encoding, header=header_line)
     except Exception as e:
-        detected_encoding = detect_encoding(path)
-        try:
-            return pd.read_csv(path, encoding=detected_encoding, header=header_line)
-        except Exception as e:
-            print(f"Could not read {path} with detected encoding {detected_encoding}: {e}")
-            return None
+        print(f"Could not read {path} with detected encoding {detected_encoding}: {e}")
+        return None
 
 def load_csv(filename):
     # 文字コード判定
