@@ -15,8 +15,9 @@ OpenData Bridgeの検索で取得した様々なフォーマットのcsvファ�
 4. データ変換＆結合(datanorm.py)
 ### B. pipelineで自動化
 データのダウンロード先を定義し、A-3で作成した変換定義を指定することでデータ取得、変換、マージの流れを自動化します。
-1. ソースコード＆ダウンロード定義を取得(git clone)
-2. pipelineの実行
+1. ソースコードを取得(git clone)
+2. 処理定義を取得
+3. pipelineの実行
 
 ## Python バージョン
 3.11.5
@@ -62,14 +63,24 @@ python datanorm.py ./data
 ./dataは変換＆結合するcsvファイルがあるディレクトリ
 
 ## 実行方法 B. pipelineで自動化
-### 1. ソースコード＆ダウンロード定義を取得
+### 1. ソースコードを取得(A-1と同じ、実施済であれば不要)
 ```
 git clone https://github.com/dx-junkyard/OpenData-Bridge-DataNorm.git && cd ./OpenData-Bridge-DataNorm
 ```
 
-### 2. ダウンロード定義、パイプライン定義を取得
+追加のライブラリのインストール
+```sh
+pip install -r requirements.txt
+```
+
+
+### 2. 処理定義を取得
+#### Dataダウンロード定義を取得
 ```
 curl -o download_config.json https://raw.githubusercontent.com/dx-junkyard/OpenData-Library/main/resources_configs/00001_download_config.json
+```
+#### パイプライン定義を取得
+```
 curl -o pipeline.yaml https://raw.githubusercontent.com/dx-junkyard/OpenData-Library/main/pipelines/00001_pipeline.yaml
 ```
 
