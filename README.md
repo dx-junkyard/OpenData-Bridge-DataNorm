@@ -64,10 +64,16 @@ python datanorm.py ./data
 ## 実行方法 B. pipelineで自動化
 ### 1. ソースコード＆ダウンロード定義を取得
 ```
-git clone https://github.com/dx-junkyard/OpenData-Bridge-DataNorm.git && cd ./OpenData-Bridge-DataNorm && curl -o download_config.json https://raw.githubusercontent.com/dx-junkyard/OpenData-Library/main/resources_configs/00001_download_config.json
+git clone https://github.com/dx-junkyard/OpenData-Bridge-DataNorm.git && cd ./OpenData-Bridge-DataNorm
 ```
 
-### 2. pipelineの実行
+### 2. ダウンロード定義、パイプライン定義を取得
+```
+curl -o download_config.json https://raw.githubusercontent.com/dx-junkyard/OpenData-Library/main/resources_configs/00001_download_config.json
+curl -o pipeline.yaml https://raw.githubusercontent.com/dx-junkyard/OpenData-Library/main/pipelines/00001_pipeline.yaml
+```
+
+### 3. pipelineの実行
 ```sh
 python pipeline_executor.py  pipeline.yaml
 ```
