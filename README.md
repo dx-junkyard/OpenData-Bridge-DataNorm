@@ -15,10 +15,8 @@ OpenData Bridgeの検索で取得した様々なフォーマットのcsvファ�
 4. データ変換＆結合(datanorm.py)
 ### B. pipelineで自動化
 データのダウンロード先を定義し、A-3で作成した変換定義を指定することでデータ取得、変換、マージの流れを自動化します。
-1. ソースコードを取得(git clone)
-2. ダウンロード定義ファイルを作成
-3. pipeline定義（stepごとの実行内容、変換定義を指定）
-4. pipelineの実行
+1. ソースコード＆ダウンロード定義を取得(git clone)
+2. pipelineの実行
 
 ## Python バージョン
 3.11.5
@@ -64,41 +62,12 @@ python datanorm.py ./data
 ./dataは変換＆結合するcsvファイルがあるディレクトリ
 
 ## 実行方法 B. pipelineで自動化
-### 1. ソースコードを取得(git clone)
-（A-1と同じ）
-### 2. ダウンロード定義ファイルを作成
-download_config.jsonを作成し、データダウンロード先を指定する
+### 1. ソースコード＆ダウンロード定義を取得
 ```
-{
-    "files": [
-        {
-            "title": "タイトル（現在は使っていない）",
-            "url": "https://hogehoge/filename.csv",
-            "default_url": "",
-            "author": "データ作成者",
-            "license": "何らかのライセンス",
-            "filename": "出力ファイル名"
-        },
-    ]
-}
+git clone https://github.com/dx-junkyard/OpenData-Bridge-DataNorm.git && cd ./OpenData-Bridge-DataNorm && curl -o download_config.json https://raw.githubusercontent.com/dx-junkyard/OpenData-Library/main/resources_configs/00001_download_config.json
 ```
 
-### 3. pipeline定義（stepごとの実行内容、変換定義を指定）
-pipeline.yamlを作成し、stepごとの実行内容を指定する。サンプルではダウンロードと変換＆マージ処理を指定している
-```
-steps:
-  - name: OpenDataDownload
-    type: download
-    download_config: download_config.json
-    download_dir: data
-
-  - name: MergeData
-    type: merge
-    transform_config: mapping_rules.json
-    input_files: [
-        ./data/ダウンロードしたファイル名
-```
-### 4. pipelineの実行
+### 2. pipelineの実行
 ```sh
 python pipeline_executor.py  pipeline.yaml
 ```
