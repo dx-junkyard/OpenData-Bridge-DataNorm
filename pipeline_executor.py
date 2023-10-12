@@ -39,7 +39,6 @@ def execute_pipeline(yaml_file):
             merge_module = load_module_from_path("download", "file_downloader.py")
             merge_module.download(step['download_config'], "files", step['download_dir'])
             merge_module.download(step['download_config'], "converters", "./")
-            merge_module.download(step['download_config'], "pipelines", "./")
     
         elif step['type'] == 'merge':
             merge_module = load_module_from_path("merge", "datanorm.py")
