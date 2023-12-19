@@ -15,15 +15,31 @@ class FacilityOverview:
         if tables == None:
             return
         for table_num, table in enumerate(tables):
+            section_size_dic = self.getSectionSizeDic(table.extract())
             for row_num, data_row in enumerate(table.extract()):
                 section_def = self.getConfigSection(data_row[0])
                 if section_def == None:
                     continue
-                section_info = self.parse_and_set_data(section_def, table.extract()[row_num + 1:row_num + 10])
+                section_size = section_size_dic[data_row[0]]
+                section_info = self.parse_and_set_data(section_def, table.extract()[row_num + 1:row_num + section_size])
                 print("section_info = " + str(section_info))
                 section_list.append(section_info)
         return section_list
 
+    def getSectionSizeDic(self, data_rows):
+        section_size_dic = {}
+        i = 0
+        pre_title = None
+        for row_num, data_row in enumerate(data_rows):
+            if None != self.getConfigSection(data_row[0]):
+                if pre_title != None:
+                    section_size_dic[pre_title] = i
+                    i = 0
+                pre_title = data_row[0]
+            i = i + 1
+        section_size_dic[pre_title] = i
+        print(section_size_dic)
+        return section_size_dic
     def getConfigSection(self,title):
         for section_def in settings["sections"]:
             if title == section_def["title"]:
