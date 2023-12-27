@@ -1,4 +1,6 @@
 *.pyc
 proxy-api/.venv
 proxy-api/.vscode
-proxy-api/src/resources/geocode
+proxy-api/src/notebook
+
+proxy-api/src/resources/geocode/merged_jyuukyo.csv
