@@ -1,0 +1,4 @@
+*.pyc
+proxy-api/.venv
+proxy-api/.vscode
+proxy-api/src/resources/geocode
