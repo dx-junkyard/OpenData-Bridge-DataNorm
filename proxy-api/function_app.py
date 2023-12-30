@@ -35,6 +35,23 @@ def hello(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a hello request.')
     return func.HttpResponse("Hello World from /hello", status_code=200)
 
+from src.service.translateService import TranslateService
+
+@app.route(route="jp2en", methods=["GET"], auth_level=func.AuthLevel.ANONYMOUS)
+def jp2en(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('Python HTTP trigger function for jp2en executed.')
+    translateService = TranslateService()
+
+    jp_str = req.params.get('address')
+
+    en_str = translateService.jp2en(jp_str)
+
+    return func.HttpResponse(
+        json.dumps({"en" : en_str}),
+        headers={"Content-Type": "application/json"}
+    )
+
+
 # 作業内容
 
 # キーコンテナー
