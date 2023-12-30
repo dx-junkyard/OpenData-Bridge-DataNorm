@@ -37,12 +37,12 @@ def hello(req: func.HttpRequest) -> func.HttpResponse:
 
 from src.service.translateService import TranslateService
 
-@app.route(route="jp2en", methods=["GET"], auth_level=func.AuthLevel.ANONYMOUS)
-def jp2en(req: func.HttpRequest) -> func.HttpResponse:
+@app.route(route="japanese_to_english", methods=["GET"], auth_level=func.AuthLevel.ANONYMOUS)
+def japanese_to_english(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function for jp2en executed.')
     translateService = TranslateService()
 
-    jp_str = req.params.get('address')
+    jp_str = req.params.get('jp')
 
     en_str = translateService.jp2en(jp_str)
 

@@ -31,6 +31,24 @@ curl  "https://datanorm.azurewebsites.net/api/geocode?city_block_id=3&residence_
 
 ----- 
 
+# /japanese_to_english 
+施設名称を英語へ翻訳
+### request parameter
+| name | required | description |
+| -- | -- |  -- |
+| jp | ✓ | 施設名称 |
+
+### response
+| name | type | value | description |
+| -- | -- | -- | -- |
+| en | string | | 施設名称(英字) |
+
+### sample
+```bash
+```
+
+----- 
+
 # /poi
 POIコードの取得
 ### request parameter
@@ -41,25 +59,6 @@ POIコードの取得
 | name | type | value | description |
 | -- | -- | -- | -- |
 | poi | | | | 
-
-### sample
-```bash
-```
-
------ 
-
-# /facilityname 
-施設名称をカタカナと英字変換
-### request parameter
-| name | required | description |
-| -- | -- |  -- |
-| name | ✓ | 施設名称 |
-
-### response
-| name | type | value | description |
-| -- | -- | -- | -- |
-| name_kana | string | | 施設名称(カナ) |
-| name_en | string | | 施設名称(英字) |
 
 ### sample
 ```bash
