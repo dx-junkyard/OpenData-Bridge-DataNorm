@@ -1,0 +1,7 @@
+https://catalog.registries.digital.go.jp/rsc/address/mt_rsdtdsp_rsdt_pos_city401099.csv.zip
+https://catalog.registries.digital.go.jp/rsc/address/mt_rsdtdsp_rsdt_pos_city401081.csv.zip
+https://catalog.registries.digital.go.jp/rsc/address/mt_rsdtdsp_rsdt_pos_city401064.csv.zip
+https://catalog.registries.digital.go.jp/rsc/address/mt_rsdtdsp_rsdt_pos_city401072.csv.zip
+https://catalog.registries.digital.go.jp/rsc/address/mt_rsdtdsp_rsdt_pos_city401056.csv.zip
+https://catalog.registries.digital.go.jp/rsc/address/mt_rsdtdsp_rsdt_pos_city401030.csv.zip
+https://catalog.registries.digital.go.jp/rsc/address/mt_rsdtdsp_rsdt_pos_city401013.csv.zip
