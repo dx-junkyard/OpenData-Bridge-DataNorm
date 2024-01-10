@@ -1,4 +1,4 @@
-*.pyc
+__pycache__
 proxy-api/.venv
 proxy-api/.vscode
 proxy-api/src/notebook
