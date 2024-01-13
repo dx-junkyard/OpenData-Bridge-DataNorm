@@ -76,7 +76,7 @@ $ curl {URL}/digital-go-geocode?address=%E5%8C%97%E4%B9%9D%E5%B7%9E%E5%B8%82%E8%
 ### sample
 入力: 北九州市響灘ビオトープ
 ```bash
-$ {URL}/japanese-to-english?jp=%E5%8C%97%E4%B9%9D%E5%B7%9E%E5%B8%82%E9%9F%BF%E7%81%98%E3%83%93%E3%82%AA%E3%83%88%E3%83%BC%E3%83%97
+$ curl {URL}/japanese-to-english?jp=%E5%8C%97%E4%B9%9D%E5%B7%9E%E5%B8%82%E9%9F%BF%E7%81%98%E3%83%93%E3%82%AA%E3%83%88%E3%83%BC%E3%83%97
 
 >> {"en": "Kitakyushu City Hibikinada Biotope"}
 ```
