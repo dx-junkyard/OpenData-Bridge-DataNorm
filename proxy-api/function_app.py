@@ -9,7 +9,7 @@ app = func.FunctionApp()
 from src.service.geocodeService import GeocodeRepository
 
 @app.route(route="geocode", methods=["GET"], auth_level=func.AuthLevel.ANONYMOUS)
-def Geocode(req: func.HttpRequest) -> func.HttpResponse:
+def geocode(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function for geocoding executed.')
 
     geocodeService = GeocodeRepository()
@@ -30,6 +30,26 @@ def Geocode(req: func.HttpRequest) -> func.HttpResponse:
              status_code=200
         )
 
+from src.service.digitalGoGeocodeService import DigitalGoGeocodeService
+@app.route(route="digital-go-geocode", methods=["GET"], auth_level=func.AuthLevel.ANONYMOUS)
+def digital_go_geocode(req: func.HttpRequest) -> func.HttpResponse:
+
+    digitalGoGeocodeService = DigitalGoGeocodeService()
+
+    address = req.params.get('address')
+
+    if address:
+        geocode_result = digitalGoGeocodeService.get(address)
+        return func.HttpResponse(
+            json.dumps(asdict(geocode_result)),
+            headers={"Content-Type": "application/json"}
+        )
+    else:
+        return func.HttpResponse(
+             "Please pass an address in the query string.",
+             status_code=200
+        )
+
 @app.route(route="hello", methods=["GET"], auth_level=func.AuthLevel.ANONYMOUS)
 def hello(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a hello request.')
@@ -37,7 +57,7 @@ def hello(req: func.HttpRequest) -> func.HttpResponse:
 
 from src.service.translateService import TranslateService
 
-@app.route(route="japanese_to_english", methods=["GET"], auth_level=func.AuthLevel.ANONYMOUS)
+@app.route(route="japanese-to-english", methods=["GET"], auth_level=func.AuthLevel.ANONYMOUS)
 def japanese_to_english(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function for jp2en executed.')
     translateService = TranslateService()
